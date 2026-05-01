@@ -141,7 +141,7 @@ class FluxImageGeneratorGUI:
         if path:
             self.model_path = path
             self.model_entry.delete(0, tk.END)
-            self.model_entry.insert(0, path)
+            self.model_entry.insert(0, os.path.normpath(path))
 
             if self.is_loading:
                 print("⚠️ Please wait for the current model to finish loading.")
@@ -167,7 +167,7 @@ class FluxImageGeneratorGUI:
         if path:
             self.input_image_path = path
             self.input_image_entry.delete(0, tk.END)
-            self.input_image_entry.insert(0, path)
+            self.input_image_entry.insert(0, os.path.normpath(path))
             try:
                 self.input_image_pil = load_image(path)
                 self.update_preview(self.input_image_pil, self.input_canvas)
