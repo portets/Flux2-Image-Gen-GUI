@@ -30,3 +30,8 @@ automatic FLUX.2-klein-4b model loading if found in the same folder, can select 
 Inference step adjustment
 Manual or automatic random seed
 Input image for reference or editing with automatic resolution matching
+
+# To-Do
+Add detection for Flux2-klein-base models and modify inference_step values + add guidance_scale modifier
+Output folder
+Automaticically add increment to output filename to prevent overwriting
