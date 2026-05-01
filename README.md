@@ -4,7 +4,7 @@ Vibe coded with QWEN3.6. I made this so others and myself can quickly and easily
 
 Currently only tested on Windows with an RTX 4070 and 64GB RAM. FLUX.2-klein-4b generates a 512x512 image in about 4 seconds. Should work well on any machine with 32+GB RAM but will be much faster on a machine with an Nvidia 3000 series or newer, otherwise it will fall back to CPU generation.
 
-<img src="Screenshot.png" alt="Screenshot" width="837"> 
+<img src="Screenshot.png" alt="Screenshot" width="700"> 
 
 # Usage
 Clone FLUX.2-klein-4B into the same folder as ImageGenGUI.py
