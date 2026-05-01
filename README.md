@@ -13,7 +13,7 @@ Note: FLUX.2-klein-9B also works but requires huggingface login and runs much sl
 
 Install dependencies
 ```
-pip install transformers pillow
+pip install transformers Pillow
 pip install diffusers accelerate
 ```
 Install CUDA 13+ if you have an Nvidia GPU\
