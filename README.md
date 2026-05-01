@@ -35,3 +35,4 @@ python ImageGenGUI.py
 
 # To-Do
 - Add detection for Flux2-klein-base models and modify inference_step values + add guidance_scale modifier
+- Test on Linux and Mac
