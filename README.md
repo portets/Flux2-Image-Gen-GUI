@@ -1,15 +1,15 @@
 # Flux2-Image-Gen-GUI
-Unofficial FLUX.2 GUI for local image gen.\
-Vibe coded with QWEN3.6. I made this so others and myself can quickly and easily test local image generation.\
+Unofficial FLUX.2 GUI for local image gen.
+Vibe coded with QWEN3.6. I made this so others and myself can quickly and easily test local image generation.
 
-Currently only tested on Windows with an RTX 4070 and 64GB RAM. FLUX.2-klein-4b generates a 512x512 image in about 4 seconds. Should work well on any machine with 32+GB RAM but will be much faster on a machine with an Nvidia 3000 series or newer, otherwise it will fall back to CPU generation.\
+Currently only tested on Windows with an RTX 4070 and 64GB RAM. FLUX.2-klein-4b generates a 512x512 image in about 4 seconds. Should work well on any machine with 32+GB RAM but will be much faster on a machine with an Nvidia 3000 series or newer, otherwise it will fall back to CPU generation.
 
 # Usage
-Clone FLUX.2-klein-4B into the same folder as ImageGenGUI.py\
+Clone FLUX.2-klein-4B into the same folder as ImageGenGUI.py
 ```
 git clone https://huggingface.co/black-forest-labs/FLUX.2-klein-4B
 ```
-Note: FLUX.2-klein-9B also works but requires huggingface login and runs much slower. Based on my testing 64GB RAM + 16GB VRAM is minimum for 9B to not use disk swap.\
+Note: FLUX.2-klein-9B also works but requires huggingface login and runs much slower. Based on my testing 64GB RAM + 16GB VRAM is minimum for 9B to not use disk swap.
 
 Install dependencies
 ```
