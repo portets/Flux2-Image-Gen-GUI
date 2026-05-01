@@ -28,6 +28,9 @@ class FluxImageGeneratorGUI:
         self.is_model_loaded = False
         self.is_loading = False
         self.cancel_requested = False
+        self.output_counter = 0  # Track generated images
+        self.output_folder = "Output"
+        self.output_image_path = os.path.join(self.output_folder, "generated_image.png")       
         
         self.setup_ui()
         self.root.after(100, self.check_queue)
@@ -223,6 +226,7 @@ class FluxImageGeneratorGUI:
             self.is_loading = False
             self._update_status("Status: Model Ready", "green")
             print("✅ Model fully loaded and ready!")
+            
         except Exception as e:
             print(f"❌ Failed to load model: {e}")
             self.is_loading = False
@@ -246,7 +250,7 @@ class FluxImageGeneratorGUI:
             canvas.create_text(200, 200, text="No Image", fill="#888")
             return
         
-        # Work on a COPY to preserve the original resolution
+        # Work on a copy to preserve the original resolution
         preview_img = pil_image.copy()
         preview_img.thumbnail(max_size, Image.LANCZOS)
         
@@ -281,8 +285,41 @@ class FluxImageGeneratorGUI:
         width = int(self.width_entry.get())
         height = int(self.height_entry.get())
         input_img = self.input_image_pil
+        
+            
+        # Create Output folder if it doesn't exist
+        if not os.path.exists(self.output_folder):
+            os.makedirs(self.output_folder)
+            print(f"📁 Created output folder: {self.output_folder}")        
 
-        print(f"🧵 Starting generation thread...")
+        # Find highest existing image number before generating
+        if os.path.exists(self.output_folder):
+            existing_files = [f for f in os.listdir(self.output_folder) 
+                             if f.startswith("generated_image_") and f.endswith(".png")]
+            if existing_files:
+                # Extract numbers from filenames
+                numbers = []
+                for f in existing_files:
+                    # Remove "generated_image_" and ".png"
+                    num_str = f.replace("generated_image_", "").replace(".png", "")
+                    try:
+                        numbers.append(int(num_str))
+                    except ValueError:
+                        continue
+                if numbers:
+                    # Increment from highest existing
+                    self.output_counter = max(numbers) + 1
+                else:
+                    self.output_counter = 0
+            else:
+                self.output_counter = 0
+        else:
+            self.output_counter = 0
+
+        # update output image with increment
+        filename = f"generated_image_{self.output_counter:04d}.png"
+        self.output_image_path = os.path.join(self.output_folder, filename)
+        print(f"🧵 Starting generation thread. Counter: {self.output_counter}")
         # Pass the already-loaded pipeline instead of reloading
         threading.Thread(target=self._generate_worker, args=(self.pipeline, prompt, steps, seed, width, height, input_img), daemon=True).start()
 
@@ -298,7 +335,7 @@ class FluxImageGeneratorGUI:
                 seed = random.randint(0, 2**31 - 1)
                 self.seed_entry.delete(0, tk.END)
                 self.seed_entry.insert(0, str(seed))
-                print(f"🎲 Random seed generated: {seed}")
+                print(f"🎲 Random seed generated")
             
             # Set the seed
             if seed is not None:
@@ -306,13 +343,11 @@ class FluxImageGeneratorGUI:
                 if torch.cuda.is_available():
                     torch.cuda.manual_seed(seed)
                 print(f"🎲 Seed fixed to: {seed}")
-            else:
-                print("🎲 Seed: Random (not set)")
 
 
             print(f"⚙️ Generating: {width}x{height} | Steps: {steps} | Prompt: {prompt[:50]}...")
             
-            # ⚠️ Generate (we can't interrupt mid-pipeline, but we check after)
+            # Generate (we can't interrupt mid-pipeline, but we check after)
             output = pipeline(
                 prompt=prompt,
                 image=input_img,
@@ -321,7 +356,7 @@ class FluxImageGeneratorGUI:
                 num_inference_steps=steps
             )
 
-            # ✅ FEIGN CANCELLATION: Check if user cancelled AFTER pipeline completes
+            # FEIGN CANCELLATION: Check if user cancelled AFTER pipeline completes
             if self.cancel_requested:
                 print("⚠️ Generation completed, but user cancelled - discarding result")
                 self.result_queue.put(("done", None))
