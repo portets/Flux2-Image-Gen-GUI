@@ -11,13 +11,12 @@ git clone https://huggingface.co/black-forest-labs/FLUX.2-klein-4B
 ```
 Note: FLUX.2-klein-9B also works but requires huggingface login and runs much slower. Based on my testing 64GB RAM + 16GB VRAM is minimum for 9B to not use disk swap.
 
-Install dependencies
+Install dependencies:
 ```
-pip install transformers Pillow
-pip install diffusers accelerate
+pip install transformers Pillow diffusers accelerate
 ```
-Install CUDA 13+ if you have an Nvidia GPU\
-Add the CUDA PATH for CUDA_HOME, the CUDA installer only fills the PATH for CUDA_PATH\
+Install CUDA 13+ if you have an Nvidia GPU.\
+Add the CUDA PATH for CUDA_HOME, the CUDA installer only fills the PATH for CUDA_PATH.\
 Get the correct PyTorch link for your machine from this page: https://pytorch.org/get-started/locally/
 
 Then it's as simple as running:
@@ -26,12 +25,12 @@ python ImageGenGUI.py
 ```
 
 # Current features
-Automatic FLUX.2-klein-4b model loading if found in the same folder, can select other FLUX.2 models\
-Inference step adjustment\
-Manual or automatic random seed\
-Input image for reference or editing with automatic resolution matching\
+- Automatic FLUX.2-klein-4b model loading if found in the same folder, can select other FLUX.2 models\
+- Inference step adjustment\
+- Manual or automatic random seed\
+- Input image for reference or editing with automatic resolution matching\
 
 # To-Do
-Add detection for Flux2-klein-base models and modify inference_step values + add guidance_scale modifier\
-Output folder\
-Automaticically add increment to output filename to prevent overwriting\
+- Add detection for Flux2-klein-base models and modify inference_step values + add guidance_scale modifier\
+- Output folder\
+- Automaticically add increment to output filename to prevent overwriting\
