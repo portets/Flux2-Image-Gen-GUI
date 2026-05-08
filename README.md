@@ -73,3 +73,4 @@ python ImageGenGUI.py
 
 # Known Bugs:
 - When running out of VRAM, program needs restarted to unload current memory
+- Linux isn't as happy to spill from VRAM to system RAM when overfilled, how to fix?
