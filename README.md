@@ -67,6 +67,9 @@ python ImageGenGUI.py
 - Automaticically add increment to output filename to prevent overwriting
 
 # To-Do
-- Add cpu offload switch and warning if output resolution too high and vram too low
-- Tune vram detection values for sequential vs model cpu offload
+- Add cpu offload switch and warning if output resolution too high and VRAM too low
+- Tune VRAM detection values for sequential vs model cpu offload
 - Add detection for Flux2-klein-base models and modify inference_step values + add guidance_scale modifier
+
+# Known Bugs:
+- When running out of VRAM, program needs restarted to unload current memory
