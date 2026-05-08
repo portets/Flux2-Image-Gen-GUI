@@ -7,6 +7,8 @@ from PIL import Image, ImageTk
 import threading
 import queue
 import os
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+
 import torch
 from diffusers import Flux2KleinPipeline
 from diffusers.utils import load_image
@@ -195,31 +197,63 @@ class FluxImageGeneratorGUI:
             print(f"🎨 Loading pipeline from: {model_path}")
             print("⏳ This may take a moment...")
             
-            pipeline = Flux2KleinPipeline.from_pretrained(
-                model_path,
-                local_files_only=True,
-            )
-            print("🏋  Weights loaded")
-            print("🔌 Setting up device...")
-            
             # Auto-detect best dtype for your GPU
             if torch.cuda.is_available():
-                device = torch.device("cuda")
+                torch.backends.cuda.enable_flash_sdp(True)
+                torch.backends.cuda.enable_mem_efficient_sdp(True)
+                torch.backends.cuda.enable_math_sdp(True)
+                torch.backends.cudnn.benchmark = True
+                
+                model_name = os.path.basename(model_path).lower()
+                
+                free_mem, total_mem = torch.cuda.mem_get_info()
+                total_vram_gb = round(total_mem / (1024**3))
+                available_vram_gb = free_mem / (1024**3)
+                print(f"🖥️  Detected VRAM: {total_vram_gb:.2f} GB")
+                print(f"🖥️  Available VRAM: {available_vram_gb:.2f} GB")
+                
                 # Use bfloat16 for newer NVIDIA GPUs, float16 for older
                 if torch.cuda.get_device_capability()[0] >= 8:  # Volta+ (A100, V100, RTX 30/40 series)
-                    dtype = torch.bfloat16
+                    dtype = torch.float16
+                    
                 else:
                     dtype = torch.float16
-                pipeline = pipeline.to(dtype).to(device)
-                print(f"🖥️ Device: CUDA | Dtype: {dtype}")
+                    
+                pipeline = Flux2KleinPipeline.from_pretrained(
+                    model_path,
+                    torch_dtype=dtype,
+                    local_files_only=True)
+                
+                print("🏋  Weights loaded")
+                print(f"🖥️  Device: CUDA | Dtype: {dtype}")
                 print("💾 Model loading on GPU")
+                
+                if "9b" in model_name and available_vram_gb < 30:
+                    print("🐢 9B model detected → sequential CPU offload(slower)")
+                    pipeline.enable_sequential_cpu_offload()
+
+                elif available_vram_gb < 10:
+                    print("🐢 Low available VRAM detected → sequential CPU offload(slower)")
+                    pipeline.enable_sequential_cpu_offload()
+
+                else:
+                    print("⚡ Using standard CPU offload(faster)")
+                    pipeline.enable_sequential_cpu_offload()
+                
             else:
-                pipeline = pipeline.to(torch.float32)
+                pipeline = Flux2KleinPipeline.from_pretrained(
+                    model_path,
+                    torch_dtype=torch.float32,
+                    local_files_only=True)
+                
+                # add these to resolution detection, they are slower and reduce quality slightly but save vram enabling higher res
+                #pipeline.vae.enable_tiling()
+                #pipeline.vae.enable_slicing()
+                # also switch to pipeline.enable_sequential_cpu_offload() if res too high, slower but doesn't degrade quality
+                
+                print("🏋  Weights loaded")
                 print(f"💻 Device: CPU | Dtype: float32")
                 print("💾 Model loading on CPU")
-    
-            pipeline.enable_model_cpu_offload()
-            print("💻 Model partially offloaded to CPU for VRAM efficiency")
                 
             self.pipeline = pipeline
             self.is_model_loaded = True
