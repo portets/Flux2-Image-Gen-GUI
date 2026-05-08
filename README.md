@@ -13,9 +13,8 @@ git clone https://huggingface.co/black-forest-labs/FLUX.2-klein-4B
 ```
 Note: FLUX.2-klein-9B also works but requires huggingface login and runs much slower.
 
-Install CUDA 13+ if you have an Nvidia GPU.\
-
 On Windows:\
+Install CUDA 13+ if you have an Nvidia GPU.\
 Add the CUDA PATH for CUDA_HOME, the CUDA installer only fills the PATH for CUDA_PATH.\
 Use the correct PyTorch install command for your machine from this page: https://pytorch.org/get-started/locally/\
 Then:
@@ -24,8 +23,9 @@ pip install diffusers transformers accelerate
 ```
 
 On Linux(Ubuntu/Debian based distros):
+Install CUDA 13+ if you have an Nvidia GPU and the driver nvidia-580-open or newer.\
 ```
-apt install python3-tk
+sudo apt update && apt install python3-tk
 python -m venv .venv
 source .venv/bin/activate
 pip install diffusers transformers accelerate
