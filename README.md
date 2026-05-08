@@ -16,8 +16,8 @@ Note: FLUX.2-klein-9B also works but requires huggingface login and runs much sl
 Install CUDA 13+ if you have an Nvidia GPU.\
 
 On Windows:\
-add the CUDA PATH for CUDA_HOME, the CUDA installer only fills the PATH for CUDA_PATH.\
-Use the correct PyTorch install command for your machine from this page: https://pytorch.org/get-started/locally/
+Add the CUDA PATH for CUDA_HOME, the CUDA installer only fills the PATH for CUDA_PATH.\
+Use the correct PyTorch install command for your machine from this page: https://pytorch.org/get-started/locally/\
 Then:
 ```
 pip install diffusers transformers accelerate
