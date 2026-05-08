@@ -38,6 +38,21 @@ Linux without CUDA:
 ```
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 ```
+To automate "source .venv/bin/activate", add this to ~/.bashrc:
+```
+# Auto-activate venv if it exists in the current directory or CDing into a directory
+if [[ -f ".venv/bin/activate" ]]; then
+    source .venv/bin/activate
+fi
+
+cd() {
+  builtin cd "$@"
+  if [ -d ".venv" ]; then
+    source .venv/bin/activate
+  fi
+}
+```
+This automatically enables the local python venv(virtual environment) in your terminal with pytorch installed.
 
 Then it's as simple as running:
 ```
