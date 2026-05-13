@@ -68,6 +68,7 @@ python ImageGenGUI.py
 
 # To-Do
 - Add cpu offload switch and warning if output resolution too high and VRAM too low
+- Add Flash Attention
 - Tune VRAM detection values for sequential vs model cpu offload
 - Add detection for Flux2-klein-base models and modify inference_step values + add guidance_scale modifier
 
